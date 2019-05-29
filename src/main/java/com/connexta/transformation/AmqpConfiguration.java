@@ -13,7 +13,6 @@
  */
 package com.connexta.transformation;
 
-import com.connexta.transformation.api.ServiceRegistryQueueConstants;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -54,6 +53,18 @@ public class AmqpConfiguration {
   @Value("${spring.rabbitmq.template.exchange}")
   private String exchangeName;
 
+  @Value("${spring.rabbitmq.request-queue-name")
+  private String requestQueueName;
+
+  @Value("${spring.rabbitmq.service-queue-name")
+  private String serviceQueueName;
+
+  @Value("${spring.rabbitmq.request-routing-key")
+  private String requestRoutingKey;
+
+  @Value("${spring.rabbitmq.service-routing-key")
+  private String serviceRoutingKey;
+
   @Bean
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory connectionFactory =
@@ -68,12 +79,12 @@ public class AmqpConfiguration {
 
   @Bean
   public Queue requestQueue() {
-    return new Queue(ServiceRegistryQueueConstants.REQUEST_QUEUE_NAME, true);
+    return new Queue(this.requestQueueName, true);
   }
 
   @Bean
   public Queue serviceQueue() {
-    return new Queue(ServiceRegistryQueueConstants.SERVICE_QUEUE_NAME, true);
+    return new Queue(this.serviceQueueName, true);
   }
 
   @Bean
@@ -84,20 +95,20 @@ public class AmqpConfiguration {
   @Bean
   public Binding requestBinding() {
     return BindingBuilder.bind(this.requestQueue()).to(this.exchange())
-        .with(ServiceRegistryQueueConstants.REQUEST_ROUTING_KEY);
+        .with(this.requestRoutingKey);
   }
 
   @Bean
   public Binding serviceBinding() {
     return BindingBuilder.bind(this.serviceQueue()).to(this.exchange())
-        .with(ServiceRegistryQueueConstants.SERVICE_ROUTING_KEY);
+        .with(this.serviceRoutingKey);
   }
 
   @Bean
   public AmqpTemplate amqpTemplate() {
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
     rabbitTemplate.setExchange(this.exchangeName);
-    rabbitTemplate.setRoutingKey(ServiceRegistryQueueConstants.SERVICE_ROUTING_KEY);
+    rabbitTemplate.setRoutingKey(this.serviceRoutingKey);
     return rabbitTemplate;
   }
 
@@ -106,7 +117,7 @@ public class AmqpConfiguration {
       MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(ServiceRegistryQueueConstants.REQUEST_QUEUE_NAME);
+    container.setQueueNames(this.requestQueueName);
     container.setMessageListener(listenerAdapter);
     return container;
   }
