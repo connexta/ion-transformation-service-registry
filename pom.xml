@@ -31,7 +31,7 @@ License is distributed along with this program and can be found at
     <dependency>
       <groupId>com.rabbitmq</groupId>
       <artifactId>amqp-client</artifactId>
-      <version>5.5.1</version>
+      <version>${amqp-client.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -87,6 +87,11 @@ License is distributed along with this program and can be found at
 
   <properties>
     <java.version>1.8</java.version>
+    <amqp-client.version>5.5.1</amqp-client.version>
+    <slf4j-api.version>1.7.25</slf4j-api.version>
+    <spring-amqp.version>2.1.5.RELEASE</spring-amqp.version>
+    <spring-rabbit.version>2.1.5.RELEASE</spring-rabbit.version>
+    <spring-boot-starter-web.version>2.1.5.RELEASE</spring-boot-starter-web.version>
   </properties>
 
   <build>
@@ -94,6 +99,19 @@ License is distributed along with this program and can be found at
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>1.23.0</version>
+        <configuration>
+          <java>
+            <eclipse>
+              <file>${basedir}/eclipse-fmt.xml</file>
+              <version>4.7.1</version>
+            </eclipse>
+          </java>
+        </configuration>
       </plugin>
     </plugins>
   </build>

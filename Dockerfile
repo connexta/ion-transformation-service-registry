@@ -11,9 +11,9 @@
 # <http://www.gnu.org/licenses/lgpl.html>.
 
 FROM openjdk:8-jre-alpine
-VOLUME /tmp
 WORKDIR /transformation-app
-COPY target/ion-transformation-service-registry-0.0.1-SNAPSHOT.jar transformation-service-registry.jar
+ARG VERSION=0.0.1-SNAPSHOT
+COPY target/ion-transformation-service-registry-${VERSION}.jar transformation-service-registry.jar
 COPY target/classes/application.properties application.properties
 ENTRYPOINT ["java",\
     "-Djava.security.egd=file:/dev/./urandom",\
