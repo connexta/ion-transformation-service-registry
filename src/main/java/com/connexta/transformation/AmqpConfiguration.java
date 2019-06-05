@@ -55,16 +55,16 @@ public class AmqpConfiguration {
   @Value("${spring.rabbitmq.template.exchange}")
   private String exchangeName;
 
-  @Value("${spring.rabbitmq.request-queue-name")
+  @Value("${spring.rabbitmq.request-queue-name}")
   private String requestQueueName;
 
-  @Value("${spring.rabbitmq.service-queue-name")
+  @Value("${spring.rabbitmq.service-queue-name}")
   private String serviceQueueName;
 
-  @Value("${spring.rabbitmq.request-routing-key")
+  @Value("${spring.rabbitmq.request-routing-key}")
   private String requestRoutingKey;
 
-  @Value("${spring.rabbitmq.service-routing-key")
+  @Value("${spring.rabbitmq.service-routing-key}")
   private String serviceRoutingKey;
 
   @Bean

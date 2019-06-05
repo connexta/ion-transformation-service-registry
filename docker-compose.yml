@@ -42,7 +42,10 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_VIRTUAL_HOST: "/"
       RABBITMQ_EXCHANGE: "transformation"
-      RABBITMQ_ROUTING_KEY: "request"
+      RABBITMQ_REQUEST_ROUTING_KEY: "request"
+      RABBITMQ_SERVICE_ROUTING_KEY: "service"
+      RABBITMQ_REQUEST_QUEUE_NAME: "request"
+      RABBITMQ_SERVICE_QUEUE_NAME: "service"
     networks:
       - transform
     configs:
