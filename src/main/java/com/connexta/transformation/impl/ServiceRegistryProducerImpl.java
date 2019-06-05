@@ -15,23 +15,22 @@ package com.connexta.transformation.impl;
 
 import com.connexta.transformation.api.ServiceRegistryProducer;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Component;
-import com.connexta.transformation.AmqpConfiguration;
 
 @Component
 public class ServiceRegistryProducerImpl implements ServiceRegistryProducer {
-  private final ApplicationContext context = new AnnotationConfigApplicationContext(
-      AmqpConfiguration.class);
-  private final AmqpTemplate amqpTemplate = context.getBean(RabbitTemplate.class);
+  private final AmqpTemplate amqpTemplate;
 
-  public ServiceRegistryProducerImpl() {
-    // No-arg constructor
+  public ServiceRegistryProducerImpl(AmqpTemplate amqpTemplate) {
+    this.amqpTemplate = amqpTemplate;
   }
 
   @Override
+  public void publishToQueue(Message transformRequest) {
+    this.amqpTemplate.convertAndSend(transformRequest);
+  }
+
   public void publishToQueue(byte[] transformRequest) {
     this.amqpTemplate.convertAndSend(transformRequest);
   }

@@ -13,6 +13,8 @@
  */
 package com.connexta.transformation;
 
+import com.connexta.transformation.api.ServiceRegistryConsumer;
+import com.connexta.transformation.impl.ServiceRegistryConsumerImpl;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -29,9 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import com.connexta.transformation.api.ServiceRegistryConsumer;
-import com.connexta.transformation.impl.ServiceRegistryConsumerImpl;
-import org.springframework.messaging.converter.MessageConverter;
 
 @Configuration
 @EnableRabbit
@@ -67,6 +66,8 @@ public class AmqpConfiguration {
   @Value("${spring.rabbitmq.service-routing-key}")
   private String serviceRoutingKey;
 
+  private final static String consumeMethod = "consumeFromQueue";
+
   @Bean
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory connectionFactory =
@@ -96,13 +97,15 @@ public class AmqpConfiguration {
 
   @Bean
   public Binding requestBinding() {
-    return BindingBuilder.bind(this.requestQueue()).to(this.exchange())
+    return BindingBuilder.bind(this.requestQueue())
+        .to(this.exchange())
         .with(this.requestRoutingKey);
   }
 
   @Bean
   public Binding serviceBinding() {
-    return BindingBuilder.bind(this.serviceQueue()).to(this.exchange())
+    return BindingBuilder.bind(this.serviceQueue())
+        .to(this.exchange())
         .with(this.serviceRoutingKey);
   }
 
@@ -111,12 +114,13 @@ public class AmqpConfiguration {
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
     rabbitTemplate.setExchange(this.exchangeName);
     rabbitTemplate.setRoutingKey(this.serviceRoutingKey);
+    rabbitTemplate.setMessageConverter(jsonMessageConverter());
     return rabbitTemplate;
   }
 
   @Bean
-  public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-      MessageListenerAdapter listenerAdapter) {
+  public SimpleMessageListenerContainer container(
+      ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(this.requestQueueName);
@@ -126,8 +130,8 @@ public class AmqpConfiguration {
 
   @Bean
   public MessageListenerAdapter listenerAdapter() {
-    ServiceRegistryConsumer consumer = new ServiceRegistryConsumerImpl();
-    return new MessageListenerAdapter(consumer, "consumeFromQueue");
+    ServiceRegistryConsumer consumer = new ServiceRegistryConsumerImpl(amqpTemplate());
+    return new MessageListenerAdapter(consumer, consumeMethod);
   }
 
   @Bean

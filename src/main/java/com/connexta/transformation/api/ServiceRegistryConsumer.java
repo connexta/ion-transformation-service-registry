@@ -13,6 +13,22 @@
  */
 package com.connexta.transformation.api;
 
+import org.springframework.amqp.core.Message;
+
+/** Represents an AMQP consumer. */
 public interface ServiceRegistryConsumer {
-  void consumeFromQueue(byte[] transformRequest) throws InterruptedException;
+
+  /**
+   * Consumes an AMQP message from a queue that is stored as a Message object format.
+   *
+   * @param transformRequest an AMQP message on the queue representing a transform request
+   */
+  void consumeFromQueue(Message transformRequest);
+
+  /**
+   * Consumes an AMQP message from a queue that is stored as a byte array format.
+   *
+   * @param transformRequest an AMQP message on the queue representing a transform request
+   */
+  void consumeFromQueue(byte[] transformRequest);
 }

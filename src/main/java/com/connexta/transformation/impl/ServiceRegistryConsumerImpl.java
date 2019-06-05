@@ -13,44 +13,49 @@
  */
 package com.connexta.transformation.impl;
 
-import com.connexta.transformation.AmqpConfiguration;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 import com.connexta.transformation.api.ServiceRegistryConsumer;
 import com.connexta.transformation.api.ServiceRegistryProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceRegistryConsumerImpl implements ServiceRegistryConsumer {
-  private final ApplicationContext context = new AnnotationConfigApplicationContext(
-      AmqpConfiguration.class);
-
   private final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistryConsumerImpl.class);
-  private final Jackson2JsonMessageConverter jsonMessageConverter =
-      context.getBean(Jackson2JsonMessageConverter.class);
+  private final AmqpTemplate amqpTemplate;
+  private final ServiceRegistryProducer producer;
 
-  public ServiceRegistryConsumerImpl() {
-    // No-arg constructor
+  public ServiceRegistryConsumerImpl(AmqpTemplate amqpTemplate) {
+    this.amqpTemplate = amqpTemplate;
+    this.producer = new ServiceRegistryProducerImpl(amqpTemplate);
   }
 
   @Override
-  public void consumeFromQueue(byte[] transformRequest) throws InterruptedException {
-//    JSONObject requestJson = new JSONObject(new String(transformRequest));
-//    String mimeType = requestJson.getString("mimeType");
-
-    Message mimeType = jsonMessageConverter.toMessage(transformRequest, null);
-
-    LOGGER.info(String.format("Querying for mime type '%s'", mimeType.toString()));
+  public void consumeFromQueue(Message transformRequest) {
+    LOGGER.info(String.format("%s", transformRequest.toString()));
 
     // @TODO - do work (query database)
-    Thread.sleep(5000);  // @TODO - remove this
 
-    ServiceRegistryProducer producer = new ServiceRegistryProducerImpl();
+    ServiceRegistryProducer producer = new ServiceRegistryProducerImpl(amqpTemplate);
     producer.publishToQueue(transformRequest);
+  }
+
+  @Override
+  public void consumeFromQueue(byte[] transformRequest) {
+    //    JSONObject requestJson = new JSONObject(new String(transformRequest));
+    //    String mimeType = requestJson.getString("mimeType");
+
+    //    Message mimeType = jsonMessageConverter.toMessage(transformRequest, null);
+
+    //    LOGGER.info(String.format("Querying for mime type '%s'", mimeType.toString()));
+
+    LOGGER.info(String.format("%s", transformRequest.toString()));
+
+    // @TODO - do work (query database)
+
+    //    ServiceRegistryProducer producer = new ServiceRegistryProducerImpl(amqpTemplate);
+    this.producer.publishToQueue(transformRequest);
   }
 }
