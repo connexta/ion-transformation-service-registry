@@ -27,8 +27,8 @@ services:
       RABBITMQ_DEFAULT_PASS: "ion"
     networks:
       - transform
-  transformation-service-registry:
-    image: transformation-service-registry:latest
+  ion-transformation-service-registry:
+    image: ion-transformation-service-registry:latest
     hostname: transformation-service-registry
     depends_on:
       - rabbitmq

@@ -214,6 +214,42 @@ License is distributed along with this program and can be found at
       </plugin>
 
       <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.30.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <images>
+            <image>
+              <name>ion-transformation-service-registry</name>
+              <build>
+                <dockerFile>${project.basedir}/Dockerfile</dockerFile >
+              </build>
+              <run>
+              </run>
+            </image>
+          </images>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>build</goal>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
         <version>${dependency-check-maven-plugin.version}</version>
