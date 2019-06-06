@@ -11,11 +11,11 @@
 # <http://www.gnu.org/licenses/lgpl.html>.
 
 FROM openjdk:8-jre-alpine
-WORKDIR /transformation-app
+WORKDIR /transformation-service-registry-app
 ARG VERSION=0.0.1-SNAPSHOT
-COPY target/ion-transformation-service-registry-${VERSION}.jar transformation-service-registry.jar
+COPY target/ion-transformation-service-registry-${VERSION}.jar ion-transformation-service-registry.jar
 COPY target/classes/application.properties application.properties
 ENTRYPOINT ["java",\
     "-Djava.security.egd=file:/dev/./urandom",\
     "-jar",\
-    "transformation-service-registry.jar"]
+    "ion-transformation-service-registry.jar"]
