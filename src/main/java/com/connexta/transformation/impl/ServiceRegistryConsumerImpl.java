@@ -38,8 +38,7 @@ public class ServiceRegistryConsumerImpl implements ServiceRegistryConsumer {
 
     // @TODO - do work (query database)
 
-    ServiceRegistryProducer producer = new ServiceRegistryProducerImpl(amqpTemplate);
-    producer.publishToQueue(transformRequest);
+    this.producer.publishToQueue(transformRequest);
   }
 
   @Override

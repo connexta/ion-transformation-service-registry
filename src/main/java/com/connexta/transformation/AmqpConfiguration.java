@@ -66,7 +66,7 @@ public class AmqpConfiguration {
   @Value("${spring.rabbitmq.service-routing-key}")
   private String serviceRoutingKey;
 
-  private final static String consumeMethod = "consumeFromQueue";
+  private static final String consumeMethod = "consumeFromQueue";
 
   @Bean
   public ConnectionFactory connectionFactory() {
