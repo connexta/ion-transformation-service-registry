@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+/** Spring configuration for AMQP. Provides @Bean methods to be used for bean definitions. */
 @Configuration
 @EnableRabbit
 @PropertySource("classpath:application.properties")
@@ -66,15 +67,15 @@ public class AmqpConfiguration {
   @Value("${spring.rabbitmq.service-routing-key}")
   private String serviceRoutingKey;
 
-  private static final String consumeMethod = "consumeFromQueue";
+  private static final String CONSUME_METHOD = "consumeFromQueue";
 
   @Bean
   public ConnectionFactory connectionFactory() {
     CachingConnectionFactory connectionFactory =
-        new CachingConnectionFactory(this.messageBrokerHost, this.messageBrokerPort);
-    connectionFactory.setUsername(this.username);
-    connectionFactory.setPassword(this.password);
-    connectionFactory.setVirtualHost(this.virtualHost);
+        new CachingConnectionFactory(messageBrokerHost, messageBrokerPort);
+    connectionFactory.setUsername(username);
+    connectionFactory.setPassword(password);
+    connectionFactory.setVirtualHost(virtualHost);
     connectionFactory.setPublisherReturns(true);
     connectionFactory.setPublisherConfirms(true);
     return connectionFactory;
@@ -82,38 +83,34 @@ public class AmqpConfiguration {
 
   @Bean
   public Queue requestQueue() {
-    return new Queue(this.requestQueueName, true);
+    return new Queue(requestQueueName, true);
   }
 
   @Bean
   public Queue serviceQueue() {
-    return new Queue(this.serviceQueueName, true);
+    return new Queue(serviceQueueName, true);
   }
 
   @Bean
   public TopicExchange exchange() {
-    return new TopicExchange(this.exchangeName);
+    return new TopicExchange(exchangeName);
   }
 
   @Bean
   public Binding requestBinding() {
-    return BindingBuilder.bind(this.requestQueue())
-        .to(this.exchange())
-        .with(this.requestRoutingKey);
+    return BindingBuilder.bind(requestQueue()).to(exchange()).with(requestRoutingKey);
   }
 
   @Bean
   public Binding serviceBinding() {
-    return BindingBuilder.bind(this.serviceQueue())
-        .to(this.exchange())
-        .with(this.serviceRoutingKey);
+    return BindingBuilder.bind(serviceQueue()).to(exchange()).with(serviceRoutingKey);
   }
 
   @Bean
   public AmqpTemplate amqpTemplate() {
     RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-    rabbitTemplate.setExchange(this.exchangeName);
-    rabbitTemplate.setRoutingKey(this.serviceRoutingKey);
+    rabbitTemplate.setExchange(exchangeName);
+    rabbitTemplate.setRoutingKey(serviceRoutingKey);
     rabbitTemplate.setMessageConverter(jsonMessageConverter());
     return rabbitTemplate;
   }
@@ -123,7 +120,7 @@ public class AmqpConfiguration {
       ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(this.requestQueueName);
+    container.setQueueNames(requestQueueName);
     container.setMessageListener(listenerAdapter);
     return container;
   }
@@ -131,7 +128,7 @@ public class AmqpConfiguration {
   @Bean
   public MessageListenerAdapter listenerAdapter() {
     ServiceRegistryConsumer consumer = new ServiceRegistryConsumerImpl(amqpTemplate());
-    return new MessageListenerAdapter(consumer, consumeMethod);
+    return new MessageListenerAdapter(consumer, CONSUME_METHOD);
   }
 
   @Bean

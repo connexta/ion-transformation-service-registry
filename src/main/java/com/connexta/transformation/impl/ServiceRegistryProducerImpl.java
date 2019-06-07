@@ -15,9 +15,12 @@ package com.connexta.transformation.impl;
 
 import com.connexta.transformation.api.ServiceRegistryProducer;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
 import org.springframework.stereotype.Component;
 
+/**
+ * Spring component implementation of an AMQP producer. Takes in an AMQP template. Used to handle
+ * publishing to a queue.
+ */
 @Component
 public class ServiceRegistryProducerImpl implements ServiceRegistryProducer {
   private final AmqpTemplate amqpTemplate;
@@ -27,11 +30,7 @@ public class ServiceRegistryProducerImpl implements ServiceRegistryProducer {
   }
 
   @Override
-  public void publishToQueue(Message transformRequest) {
-    this.amqpTemplate.convertAndSend(transformRequest);
-  }
-
   public void publishToQueue(byte[] transformRequest) {
-    this.amqpTemplate.convertAndSend(transformRequest);
+    amqpTemplate.convertAndSend(transformRequest);
   }
 }
