@@ -12,7 +12,8 @@
 
 FROM openjdk:8-jre-alpine
 WORKDIR /transformation-service-registry-app
-ARG VERSION=0.0.1-SNAPSHOT
+# use version from command line argument
+ARG VERSION
 COPY target/ion-transformation-service-registry-${VERSION}.jar ion-transformation-service-registry.jar
 COPY target/classes/application.properties application.properties
 ENTRYPOINT ["java",\
