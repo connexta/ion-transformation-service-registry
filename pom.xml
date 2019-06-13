@@ -118,7 +118,7 @@ License is distributed along with this program and can be found at
 
     <!-- Plugin Version Properties -->
     <directory-maven-plugin.version>0.3.1</directory-maven-plugin.version>
-    <dependency-check-maven-plugin.version>5.0.0-M3</dependency-check-maven-plugin.version>
+    <dependency.check.maven.plugin.version>5.0.0-M3</dependency.check.maven.plugin.version>
     <dependency-plugin.version>3.1.1</dependency-plugin.version>
     <spotless-maven-plugin.version>1.23.0</spotless-maven-plugin.version>
     <fabric8.docker.plugin.version>0.30.0</fabric8.docker.plugin.version>
