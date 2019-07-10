@@ -124,6 +124,7 @@ License is distributed along with this program and can be found at
     <fabric8.docker.plugin.version>0.30.0</fabric8.docker.plugin.version>
     <javadoc-plugin.version>3.1.0</javadoc-plugin.version>
     <source-plugin.version>3.0.1</source-plugin.version>
+    <release-plugin.version>2.5.3</release-plugin.version>
   </properties>
 
   <dependencyManagement>
