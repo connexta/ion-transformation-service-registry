@@ -12,9 +12,7 @@ GNU Lesser General Public License for more details. A copy of the GNU Lesser Gen
 License is distributed along with this program and can be found at
 <http://www.gnu.org/licenses/lgpl.html>.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <name>Transformation Service Registry</name>
@@ -33,14 +31,14 @@ License is distributed along with this program and can be found at
 
   <groupId>com.connexta.transformation</groupId>
   <artifactId>ion-transformation-service-registry</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
 
   <scm>
     <url>https://github.com/connexta/ion-transformation-service-registry</url>
     <connection>scm:git:https://github.com/connexta/ion-transformation-service-registry.git</connection>
     <developerConnection>scm:git:https://github.com/connexta/ion-transformation-service-registry.git
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>ion-transformation-service-registry-0.0.1</tag>
   </scm>
 
   <distributionManagement>
@@ -380,8 +378,8 @@ License is distributed along with this program and can be found at
             <googleJavaFormat>
               <version>1.7</version>
             </googleJavaFormat>
-            <trimTrailingWhitespace/>
-            <removeUnusedImports/>
+            <trimTrailingWhitespace />
+            <removeUnusedImports />
           </java>
         </configuration>
         <executions>
